@@ -1,2 +1,2 @@
-# zerra_app
+# bookern_app
 Platform for entrepreneurs and services
