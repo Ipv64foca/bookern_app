@@ -1,0 +1,170 @@
+erDiagram
+    boo_groups ||--o{ boo_users : "pertenece a"
+    boo_users ||--o{ boo_employees : "es empleado"
+    boo_users ||--o{ boo_bookings : "realiza"
+    boo_users ||--o{ boo_payments : "efectúa"
+    boo_users ||--o{ boo_reviews : "escribe"
+    boo_stores ||--o{ boo_messages : "envía"
+    
+    boo_storetypes ||--o{ boo_stores : "clasifica"
+    
+    boo_stores ||--o{ boo_employees : "emplea"
+    boo_stores ||--o{ boo_categories : "tiene"
+    boo_stores ||--o{ boo_services : "ofrece"
+    boo_stores ||--o{ boo_bookings : "recibe"
+    boo_stores ||--o{ boo_schedules : "programa"
+    boo_stores ||--o{ boo_payments : "cobra"
+    boo_stores ||--o{ boo_reviews : "recibe"
+    boo_users ||--o{ boo_messages : "recibe"
+    
+    boo_categories ||--o{ boo_services : "agrupa"
+    
+    boo_employees ||--o{ boo_bookings : "atiende"
+    boo_employees ||--o{ boo_schedules : "tiene horario"
+    
+    boo_services ||--o{ boo_bookings : "reservado en"
+    boo_services ||--o{ boo_reviews : "evaluado en"
+    
+    boo_bookings ||--o{ boo_payments : "pagado con"
+    boo_bookings ||--o{ boo_messages : "genera"
+
+    boo_groups {
+        INT group_id PK
+        VARCHAR group_name
+        VARCHAR group_description
+    }
+
+    boo_users {
+        INT user_id PK
+        INT fk_user_group FK
+        VARCHAR user_name
+        VARCHAR user_mail UK
+        VARCHAR user_phone
+        DATE user_birthday
+        VARCHAR user_passw
+        VARCHAR user_image
+        ENUM user_status "inactive, active, banned"
+        ENUM user_gender "male, female, other"
+        TIMESTAMP user_created
+        TIMESTAMP user_modified
+    }
+
+    boo_storetypes {
+        INT storetype_id PK
+        VARCHAR storetype_name
+        VARCHAR storetype_description
+        VARCHAR storetype_icon
+        TIMESTAMP user_created
+        TIMESTAMP user_modified
+    }
+
+    boo_stores {
+        INT store_id PK
+        INT fk_store_type FK
+        VARCHAR store_name
+        VARCHAR store_description
+        VARCHAR store_address
+        VARCHAR store_city
+        VARCHAR store_state
+        VARCHAR store_zip
+        VARCHAR store_phone
+        VARCHAR store_mail UK
+        VARCHAR store_image
+        INT store_status "0,1,2"
+        TIMESTAMP store_created
+        TIMESTAMP store_modified
+    }
+
+    boo_employees {
+        INT employee_id PK
+        INT fk_employee_user FK
+        INT fk_employee_store FK
+        INT employee_status "0,1"
+        DATE employee_hire_date
+        TIMESTAMP employee_created
+        TIMESTAMP employee_modified
+    }
+
+    boo_categories {
+        INT category_id PK
+        INT fk_category_store FK
+        VARCHAR category_name
+        VARCHAR category_description
+        TIMESTAMP category_created
+        TIMESTAMP category_modified
+    }
+
+    boo_services {
+        INT service_id PK
+        INT fk_service_store FK
+        INT fk_service_category FK
+        VARCHAR service_title
+        DECIMAL service_price
+        VARCHAR service_description
+        INT service_duration
+        INT service_active "0,1"
+        TIMESTAMP service_created
+        TIMESTAMP service_modified
+    }
+
+    boo_bookings {
+        INT booking_id PK
+        INT fk_booking_user FK
+        INT fk_booking_store FK
+        INT fk_booking_employee FK
+        INT fk_booking_service FK
+        DATE booking_date
+        TIME booking_start_time
+        TIME booking_end_time
+        TIME booking_time
+        ENUM booking_status "pending, confirmed, cancelled, completed"
+        VARCHAR booking_notes
+        TIMESTAMP booking_created
+        TIMESTAMP booking_modified
+    }
+
+    boo_schedules {
+        INT schedule_id PK
+        INT fk_schedule_store FK
+        INT fk_schedule_employee FK
+        INT schedule_date "0-6"
+        TIME schedule_start_time
+        TIME schedule_end_time
+        INT schedule_is_available "0,1"
+        TIMESTAMP schedule_created
+        TIMESTAMP schedule_modified
+    }
+
+    boo_payments {
+        INT payment_id PK
+        INT fk_payment_user FK
+        INT fk_payment_store FK
+        INT fk_payment_booking FK
+        ENUM payment_method "credit, online, cash"
+        DECIMAL payment_amount
+        ENUM payment_status "pending, paid, refunded"
+        TIMESTAMP payment_created
+        TIMESTAMP payment_modified
+    }
+
+    boo_reviews {
+        INT review_id PK
+        INT fk_review_user FK
+        INT fk_review_store FK
+        INT fk_review_service FK
+        INT review_rating "1-5"
+        TEXT review_comment
+        TIMESTAMP review_created
+        TIMESTAMP review_modified
+    }
+
+    boo_messages {
+        INT messages_id PK
+        INT fk_messages_user FK
+        INT fk_messages_booking FK
+        INT fk_messages_store FK
+        ENUM messages_type "sms, email, whatsapp"
+        VARCHAR messages_description
+        TIMESTAMP messages_created
+        TIMESTAMP messages_modified
+    }
