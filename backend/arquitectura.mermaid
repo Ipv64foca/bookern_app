@@ -1,0 +1,76 @@
+graph TB
+    subgraph "Usuario Final"
+        USER[👤 Usuario<br/>Navegador Web/Mobile]
+    end
+    
+    subgraph "Frontend - Vercel"
+        VERCEL[☁️ Vercel Platform]
+        CDN[🌐 CDN Global<br/>Edge Network]
+        NEXTJS[Next.js App<br/>React + TypeScript]
+        PAGES[Pages/Routes]
+        COMPONENTS[Components UI]
+        STATE[State Management]
+        API_CLIENT[API Client<br/>Axios/Fetch]
+        
+        VERCEL --> CDN
+        CDN --> NEXTJS
+        NEXTJS --> PAGES
+        NEXTJS --> COMPONENTS
+        NEXTJS --> STATE
+        NEXTJS --> API_CLIENT
+    end
+    
+    subgraph "Backend - Railway"
+        RAILWAY[🚂 Railway Platform]
+        EXPRESS[Node.js + Express<br/>TypeScript]
+        ROUTES[Routes/Controllers]
+        MIDDLEWARE[Middlewares]
+        AUTH_MID[Auth Middleware]
+        SERVICES[Business Logic]
+        DAL[Data Access Layer<br/>TypeORM/Prisma]
+        
+        RAILWAY --> EXPRESS
+        EXPRESS --> ROUTES
+        EXPRESS --> MIDDLEWARE
+        MIDDLEWARE --> AUTH_MID
+        ROUTES --> SERVICES
+        SERVICES --> DAL
+    end
+    
+    subgraph "Autenticación JWT"
+        JWT[🔐 JWT System]
+        TOKEN_GEN[Token Generation]
+        TOKEN_VAL[Token Validation]
+        REFRESH[Refresh Tokens]
+        
+        JWT --> TOKEN_GEN
+        JWT --> TOKEN_VAL
+        JWT --> REFRESH
+    end
+    
+    subgraph "Servidor Local"
+        LOCAL[🏠 Tu Servidor]
+        MYSQL[(MySQL Database<br/>bookern_app)]
+        POOL[Connection Pool]
+        
+        LOCAL --> POOL
+        POOL --> MYSQL
+    end
+    
+    USER -->|HTTPS Request| CDN
+    API_CLIENT -->|REST API<br/>HTTPS| EXPRESS
+    
+    AUTH_MID -.->|Validate Token| TOKEN_VAL
+    ROUTES -->|Generate Token| TOKEN_GEN
+    
+    DAL -->|SQL Queries<br/>via IP Pública| POOL
+    
+    style USER fill:#ffd700,stroke:#000,stroke-width:2px,color:#000
+    style VERCEL fill:#000,stroke:#000,stroke-width:3px,color:#fff
+    style CDN fill:#0070f3,stroke:#000,stroke-width:2px,color:#fff
+    style NEXTJS fill:#61dafb,stroke:#000,stroke-width:2px,color:#000
+    style RAILWAY fill:#6b37d4,stroke:#000,stroke-width:3px,color:#fff
+    style EXPRESS fill:#68a063,stroke:#000,stroke-width:2px,color:#fff
+    style JWT fill:#ff6b6b,stroke:#000,stroke-width:2px,color:#fff
+    style LOCAL fill:#ffa726,stroke:#000,stroke-width:3px,color:#000
+    style MYSQL fill:#00758f,stroke:#000,stroke-width:2px,color:#fff
