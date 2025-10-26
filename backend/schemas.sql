@@ -1,13 +1,13 @@
 -- Tables for the database bookern_app
 
 CREATE TABLE boo_groups (
-    group_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     group_name VARCHAR(100) NOT NULL, 
     group_description VARCHAR(255)
 );
 
 CREATE TABLE boo_users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_user_group INT NOT NULL,
     user_name VARCHAR(100) NOT NULL,
     user_mail VARCHAR(150) NOT NULL,
@@ -19,14 +19,14 @@ CREATE TABLE boo_users (
     user_gender ENUM('male', 'female', 'other') NOT NULL,
     user_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     user_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_user_group) REFERENCES boo_groups (group_id),
+    FOREIGN KEY (fk_user_group) REFERENCES boo_groups (id),
 
     -- Uniques
     CONSTRAINT user_mail_unique UNIQUE (user_mail)
 );
 
 CREATE TABLE boo_storetypes (
-    storetype_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     storetype_name VARCHAR(100) NOT NULL,
     storetype_description VARCHAR(255),
     storetype_icon VARCHAR(255),
@@ -35,7 +35,7 @@ CREATE TABLE boo_storetypes (
 );
 
 CREATE TABLE boo_stores (
-    store_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_store_type INT NOT NULL,
     store_name VARCHAR(100) NOT NULL,
     store_description VARCHAR(255) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE boo_stores (
     store_status INT NOT NULL,
     store_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     store_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_store_type) REFERENCES boo_storetypes (storetype_id),
+    FOREIGN KEY (fk_store_type) REFERENCES boo_storetypes (id),
 
     -- Uniques
     CONSTRAINT store_mail_unique UNIQUE (store_mail),
@@ -62,15 +62,15 @@ CREATE TABLE boo_stores (
     )
 );
 CREATE TABLE boo_employees (
-    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_employee_user INT NOT NULL,
     fk_employee_store INT NOT NULL, 
     employee_status INT NOT NULL,
     employee_hire_date DATE NOT NULL,
     employee_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     employee_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_employee_user) REFERENCES boo_users (user_id),
-    FOREIGN KEY (fk_employee_store) REFERENCES boo_stores (store_id),
+    FOREIGN KEY (fk_employee_user) REFERENCES boo_users (id),
+    FOREIGN KEY (fk_employee_store) REFERENCES boo_stores (id),
 
     -- Checks
     CONSTRAINT c_employee_status CHECK (
@@ -80,17 +80,17 @@ CREATE TABLE boo_employees (
 );
 
 CREATE TABLE boo_categories (
-    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_category_store INT NOT NULL, 
     category_name VARCHAR(100) NOT NULL,
     category_description VARCHAR(255) NOT NULL,
     category_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     category_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_category_store) REFERENCES boo_stores (store_id)    
+    FOREIGN KEY (fk_category_store) REFERENCES boo_stores (id)    
 );
 
 CREATE TABLE boo_services (
-    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_service_store INT NOT NULL,
     fk_service_category INT NOT NULL,
     service_title VARCHAR(100) NOT NULL,
@@ -100,8 +100,8 @@ CREATE TABLE boo_services (
     service_active INT NOT NULL,
     service_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     service_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_service_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_service_category) REFERENCES boo_categories (category_id),
+    FOREIGN KEY (fk_service_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_service_category) REFERENCES boo_categories (id),
     
     -- Checks
     CONSTRAINT c_service_active CHECK (
@@ -111,7 +111,7 @@ CREATE TABLE boo_services (
 );
 
 CREATE TABLE boo_bookings (
-    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_booking_user INT NOT NULL, 
     fk_booking_store INT NOT NULL, 
     fk_booking_employee INT NOT NULL, 
@@ -124,14 +124,14 @@ CREATE TABLE boo_bookings (
     booking_notes VARCHAR(255),
     booking_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     booking_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_booking_user) REFERENCES boo_users (user_id),
-    FOREIGN KEY (fk_booking_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_booking_employee) REFERENCES boo_employees (employee_id),
-    FOREIGN KEY (fk_booking_service) REFERENCES boo_services (service_id)
+    FOREIGN KEY (fk_booking_user) REFERENCES boo_users (id),
+    FOREIGN KEY (fk_booking_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_booking_employee) REFERENCES boo_employees (id),
+    FOREIGN KEY (fk_booking_service) REFERENCES boo_services (id)
 );
 
 CREATE TABLE boo_schedules (
-    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_schedule_store INT NOT NULL, 
     fk_schedule_employee INT NOT NULL, 
     schedule_date INT NOT NULL, 
@@ -140,8 +140,8 @@ CREATE TABLE boo_schedules (
     schedule_is_available INT NOT NULL,
     schedule_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     schedule_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_schedule_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_schedule_employee) REFERENCES boo_employees (employee_id),
+    FOREIGN KEY (fk_schedule_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_schedule_employee) REFERENCES boo_employees (id),
 
     -- Checks
     CONSTRAINT c_schedule_date CHECK (
@@ -153,7 +153,7 @@ CREATE TABLE boo_schedules (
     )
 );
 CREATE TABLE boo_payments (
-    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_payment_user INT NOT NULL, 
     fk_payment_store INT NOT NULL, 
     fk_payment_booking INT NOT NULL, 
@@ -162,13 +162,13 @@ CREATE TABLE boo_payments (
     payment_status ENUM('pending', 'paid', 'refunded') NOT NULL,
     payment_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     payment_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_payment_user) REFERENCES boo_users (user_id),
-    FOREIGN KEY (fk_payment_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_payment_booking) REFERENCES boo_bookings (booking_id)
+    FOREIGN KEY (fk_payment_user) REFERENCES boo_users (id),
+    FOREIGN KEY (fk_payment_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_payment_booking) REFERENCES boo_bookings (id)
 );
 
 CREATE TABLE boo_reviews (
-    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_review_user INT NOT NULL, 
     fk_review_store INT NOT NULL, 
     fk_review_service INT NOT NULL, 
@@ -176,9 +176,9 @@ CREATE TABLE boo_reviews (
     review_comment TEXT NULL,
     review_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     review_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_review_user) REFERENCES boo_users (user_id),
-    FOREIGN KEY (fk_review_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_review_service) REFERENCES boo_services (service_id),
+    FOREIGN KEY (fk_review_user) REFERENCES boo_users (id),
+    FOREIGN KEY (fk_review_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_review_service) REFERENCES boo_services (id),
 
     -- Checks
     CONSTRAINT c_review_rating CHECK (
@@ -187,7 +187,7 @@ CREATE TABLE boo_reviews (
 );
 
 CREATE TABLE boo_messages (
-    messages_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     fk_messages_user INT NOT NULL,
     fk_messages_booking INT NOT NULL,
     fk_messages_store INT NOT NULL, 
@@ -195,7 +195,7 @@ CREATE TABLE boo_messages (
     messages_description VARCHAR(255) NOT NULL,
     messages_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     messages_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (fk_messages_user) REFERENCES boo_users (user_id),
-    FOREIGN KEY (fk_messages_store) REFERENCES boo_stores (store_id),
-    FOREIGN KEY (fk_messages_booking) REFERENCES boo_bookings (booking_id)
+    FOREIGN KEY (fk_messages_user) REFERENCES boo_users (id),
+    FOREIGN KEY (fk_messages_store) REFERENCES boo_stores (id),
+    FOREIGN KEY (fk_messages_booking) REFERENCES boo_bookings (id)
 );
